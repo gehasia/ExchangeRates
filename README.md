@@ -1,10 +1,8 @@
 ### This fork has been made for running the webapp outside GAE
-install memcache
-easy_install ez_setup
-easy_install webapp2
-easy_install parse
-easy_install WebOb
-easy_install google_appengine
+install memcache 
+
+easy_install ez_setup webapp2 parse WebOb google_appengine 
+
 python main.py
 
 Rate Exchange JSON/JSONP APIs
