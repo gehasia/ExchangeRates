@@ -48,7 +48,7 @@ app = webapp2.WSGIApplication([
                                
 def main():
     from paste import httpserver
-    httpserver.serve(app, host='0.0.0.0', port='80')
+    httpserver.serve(app, host='0.0.0.0', port='8080')
         
 if __name__ == '__main__':
     main()

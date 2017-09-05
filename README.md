@@ -1,7 +1,7 @@
 ### This fork has been made for running the webapp outside GAE
 install memcache 
 
-easy_install ez_setup webapp2 parse WebOb google_appengine 
+easy_install ez_setup webapp2 parse WebOb google_appengine beautifulsoup4
 
 python main.py
 

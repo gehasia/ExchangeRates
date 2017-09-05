@@ -3,7 +3,9 @@
 
 import json, re, urllib2, utils, logging
 import webapp2
+
 from google.appengine.api import memcache, urlfetch
+from bs4 import BeautifulSoup
 
 NOT_SUPPORTED_RATE = -1
 
@@ -49,6 +51,29 @@ class GoogleCurrencyRateRequest():
 
 class XeCurrencyRateRequest():
     def get_rate(self, from_currency, to_currency):
+        ''' Old XE mobile page doesn't work anymore. Parsing html of the standard website pages to get the rate rights.'''
+        rate, err = None, None
+        url = u'http://www.xe.com/currencyconverter/convert/?Amount={0}&From={1}&To={2}'.format(1, urllib2.quote(from_currency), urllib2.quote(to_currency))
+        result = urlfetch.fetch(url, deadline=60)
+
+        if result.status_code != 200:
+            logging.info(u'failed to fetch rate info from xe.com, the url is "{0}", the response is {1} {2}.'.format(url, result.status_code, result.content.decode(u'utf-8', u'ignore')))
+            return (rate, u'failed to fetch rate info from xe.com, {0} returned.'.format(result.status_code))
+
+        response_str = result.content.decode(u'utf-8', u'ignore')
+        soup = BeautifulSoup(response_str, 'html.parser')
+
+        result = soup.find(class_='uccResultAmount').contents[0]
+
+        #logging.info(response_str)
+        if result is not None:
+            #logging.info(m.group(0))
+            rate = float(result.replace(u',', u''))
+        else:
+            err = 'failed to parse response from xe.com.'
+
+        return (rate, err)
+    def get_rate_legacy(self, from_currency, to_currency):
         rate, err = None, None
         url = u'http://www.xe.com/ucc/convert.cgi?template=mobile&Amount={0}&From={1}&To={2}'.format(1, urllib2.quote(from_currency), urllib2.quote(to_currency))
         result = urlfetch.fetch(url, deadline=60)
