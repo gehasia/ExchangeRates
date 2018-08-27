@@ -1,7 +1,11 @@
 ### This fork has been made for running the webapp outside GAE
+### It is now using selenium and headless chrome to get rates from xe.com as they are currently displaying values with asynchronous xhr requests
+
 install memcache 
 
-easy_install ez_setup webapp2 parse WebOb google_appengine beautifulsoup4
+easy_install ez_setup webapp2 parse WebOb google_appengine beautifulsoup4 selenium
+
+install chromedriver & dependencies
 
 python main.py
 
