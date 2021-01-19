@@ -61,10 +61,14 @@ class XeCurrencyRateRequest():
         browser = webdriver.Chrome(chrome_options=options)
         browser.implicitly_wait(15)
         browser.get(url)
-        result = browser.find_element_by_class_name("converterresult-toAmount")
+        try:
+            result = browser.find_element_by_class_name("converterresult-toAmount")
+        except Exception as e:
+            result = browser.findElement(By.cssSelector("p[class^='ConvertedSubText']"))
         if result.text is not None:
+            value = re.sub("[^\d\.]", "", result.text)
             #logging.info(m.group(0))
-            rate = float(result.text.replace(u',', u''))
+            rate = float(value.replace(u',', u''))
         else:
            err = 'failed to parse response from xe.com.'
         browser.quit() 
